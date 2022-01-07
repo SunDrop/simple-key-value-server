@@ -3,15 +3,15 @@
 
 1. Add record to hosts
 
-```bash
+```shell
 127.0.0.30 kv.local
 ```
 
-1.1. Mac users only
+- Mac users only
 Inside the docker-compose file, we are using the internal network with a lo0 interface (127.x.x.x)
 It's automatically supported on *nix machine, but for MacOS, you need some additional steps.
-* Copy content bellow into /Library/LaunchDaemons/com.docker_1270030_alias.plist
-```
+- Copy content bellow into /Library/LaunchDaemons/com.docker_1270030_alias.plist
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -30,11 +30,16 @@ It's automatically supported on *nix machine, but for MacOS, you need some addit
 </dict>
 </plist>
 ```
-* Reload LaunchDaemons by restarting the computer or run follow command
-```
+- Reload LaunchDaemons by restarting the computer or run follow command
+```shell
 sudo launchctl load /Library/LaunchDaemons/com.docker_1270030_alias.plist
 ```
 2. Run docker compose for build image locally
-```bash
+```shell
 make up
+```
+
+3. Reload dependency (if needed)
+```shell
+make composer_install
 ```
