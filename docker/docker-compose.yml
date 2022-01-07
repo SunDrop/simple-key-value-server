@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+
+  nginx:
+    image: nginx:latest
+    env_file: ['variables.env']
+    ports:
+      - "${PROJECT_HOST}:80:80"
+      - "${PROJECT_HOST}:443:443"
+    volumes:
+      - ./nginx/hosts:/etc/nginx/conf.d
+      - ../src/:/app
+    links:
+      - php
+
+  php:
+    build: ./php
+    volumes:
+      - ../src/:/app
