@@ -1,5 +1,8 @@
 {
     "autoload": {
-        "psr-4": {"KV\\": "src/"}
+        "psr-4": {"KV\\": "class/"}
+    },
+    "require": {
+        "ext-shmop": "*"
     }
 }
