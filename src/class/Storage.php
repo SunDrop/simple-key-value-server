@@ -6,40 +6,56 @@ class Storage implements StorageInterface
 {
     private MemTableInterface $memTable;
 
+    private RemovedKeysTableInterface $removedKeysTable;
+
     public function __construct()
     {
         $this->memTable = new MemTable();
+        $this->removedKeysTable = new RemovedKeysTable();
     }
 
     public function set(string $key, string $val): void
     {
         $this->memTable->set($key, $val);
+        $this->removedKeysTable->delete($key);
+        /**
+         * Todo:
+         * 1) opCount++
+         * 2) if opCount > Limit => dump SSTable
+         */
     }
 
     public function delete(string $key): void
     {
-        /**
-         * 1) Remove from MemTable
-         * 2) Add to MemRemovedKeys
-         */
+        $this->memTable->delete($key);
+        $this->removedKeysTable->add($key);
     }
 
     public function get(string $key): string
     {
+        if ($this->removedKeysTable->isExist($key)) {
+            throw new NotExistKeyException("Key $key was deleted");
+        }
+        if ($this->memTable->isExist($key)) {
+            return $this->memTable->get($key);
+        }
         /**
-         * 1) Check if exist in MemRemovedKeys
-         * 2) Check if exist in MemTable
-         * 2.1) if exist end (opCount > limit) => make dump
-         * 3) Read from SSTable
+         * TODO: Read from SSTable
          */
+        throw new NotExistKeyException("Key $key not exist");
     }
 
     public function isExist(string $key): bool
     {
+        if ($this->memTable->isExist($key)) {
+            return true;
+        }
+        if ($this->removedKeysTable->isExist($key)) {
+            return false;
+        }
         /**
-         * 1) Check if exist in MemRemovedKeys
-         * 2) Check if exist in MemTable
-         * 3) Read from SSTable
+         * TODO: Read from SSTable
          */
+        return false;
     }
 }
