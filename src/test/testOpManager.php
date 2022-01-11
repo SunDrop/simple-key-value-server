@@ -17,7 +17,7 @@ $opManager->inc();
 echo 'Count: ' . $opManager::getOpCount() . PHP_EOL;
 
 echo PHP_EOL;
-echo 'Is Limit' . PHP_EOL;
+echo 'Is Limit (current limit is ' . $opManager::OP_LIMIT . ')' . PHP_EOL;
 echo '$opManager->isLimit()' . PHP_EOL;
 echo 'Result: ';
 var_dump($opManager->isLimit());

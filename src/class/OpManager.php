@@ -6,7 +6,7 @@ class OpManager implements OpManagerInterface
 {
     use SharedMemory;
 
-    private const OP_LIMIT = 100;
+    public const OP_LIMIT = 100;
 
     public const PROJECT_ID_OP_COUNT = 'c';
 
