@@ -118,7 +118,11 @@ class SSTable implements SSTableInterface
 
     private function binarySearchKey(string $key)
     {
-        $file = new \SplFileObject(current($this->files), 'r');
+        $currentFile = current($this->files);
+        if (empty($currentFile)) {
+            return false;
+        }
+        $file = new \SplFileObject($currentFile, 'r');
         $file->seek($file->getSize());
         $low = 0;
         $high = $file->key();
