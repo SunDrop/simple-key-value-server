@@ -42,3 +42,5 @@ make up
 ```shell
 make composer_install
 ```
+
+4. Open link http://kv.local/ in your browser
