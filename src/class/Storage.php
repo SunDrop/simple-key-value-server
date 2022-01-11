@@ -4,25 +4,29 @@ namespace KV;
 
 class Storage implements StorageInterface
 {
+    private OpManagerInterface $opManager;
+
     private MemTableInterface $memTable;
 
     private RemovedKeysTableInterface $removedKeysTable;
 
     public function __construct()
     {
+        $this->opManager = new OpManager();
         $this->memTable = new MemTable();
         $this->removedKeysTable = new RemovedKeysTable();
     }
 
     public function set(string $key, string $val): void
     {
+        $this->opManager->inc();
         $this->memTable->set($key, $val);
         $this->removedKeysTable->delete($key);
-        /**
-         * Todo:
-         * 1) opCount++
-         * 2) if opCount > Limit => dump SSTable
-         */
+        if ($this->opManager->isLimit()) {
+            // TODO: dump SSTable
+            $this->opManager->reset();
+            $this->memTable->reset();
+        }
     }
 
     public function delete(string $key): void
@@ -53,6 +57,7 @@ class Storage implements StorageInterface
         if ($this->removedKeysTable->isExist($key)) {
             return false;
         }
+
         /**
          * TODO: Read from SSTable
          */

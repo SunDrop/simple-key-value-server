@@ -42,6 +42,3 @@ $as1 = $memtable->isExist('as1');
 echo 'Result: ';
 var_dump($as1);
 echo PHP_EOL;
-
-echo 'OpCount (set() + delete()): ';
-var_dump($memtable::getOpCount());

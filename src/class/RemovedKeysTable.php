@@ -29,6 +29,11 @@ class RemovedKeysTable implements RemovedKeysTableInterface
         }
     }
 
+    public function __destruct()
+    {
+        @shmop_close($this->memory);
+    }
+
     public function add(string $key): void
     {
         $this->keys[$key] = true;
