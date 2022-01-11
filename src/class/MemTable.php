@@ -62,6 +62,14 @@ class MemTable implements MemTableInterface
         $this->flush();
     }
 
+    public function getSortedData(): array
+    {
+        $data = $this->data;
+        ksort($data, SORT_STRING);
+
+        return $data;
+    }
+
     private function flush()
     {
         return $this->flushSharedMemory($this->memory, serialize($this->data) . "\0");

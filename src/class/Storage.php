@@ -10,11 +10,14 @@ class Storage implements StorageInterface
 
     private RemovedKeysTableInterface $removedKeysTable;
 
+    private SSTableInterface $ssTable;
+
     public function __construct()
     {
         $this->opManager = new OpManager();
         $this->memTable = new MemTable();
         $this->removedKeysTable = new RemovedKeysTable();
+        $this->ssTable = new SSTable();
     }
 
     public function set(string $key, string $val): void
@@ -23,7 +26,10 @@ class Storage implements StorageInterface
         $this->memTable->set($key, $val);
         $this->removedKeysTable->delete($key);
         if ($this->opManager->isLimit()) {
-            // TODO: dump SSTable
+            $this->ssTable->dump(
+                $this->memTable->getSortedData(),
+                $this->removedKeysTable->getData()
+            );
             $this->opManager->reset();
             $this->memTable->reset();
         }
@@ -43,10 +49,8 @@ class Storage implements StorageInterface
         if ($this->memTable->isExist($key)) {
             return $this->memTable->get($key);
         }
-        /**
-         * TODO: Read from SSTable
-         */
-        throw new NotExistKeyException("Key $key not exist");
+
+        return $this->ssTable->get($key);
     }
 
     public function isExist(string $key): bool
@@ -58,9 +62,6 @@ class Storage implements StorageInterface
             return false;
         }
 
-        /**
-         * TODO: Read from SSTable
-         */
-        return false;
+        return $this->ssTable->isExist($key);
     }
 }

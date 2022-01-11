@@ -13,4 +13,6 @@ interface MemTableInterface
     public function isExist(string $key): bool;
 
     public function reset();
+
+    public function getSortedData();
 }

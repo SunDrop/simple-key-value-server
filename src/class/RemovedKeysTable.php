@@ -51,6 +51,11 @@ class RemovedKeysTable implements RemovedKeysTableInterface
         return isset($this->keys[$key]);
     }
 
+    public function getData(): array
+    {
+        return $this->keys;
+    }
+
     private function flush()
     {
         $this->flushSharedMemory($this->memory, serialize($this->keys));

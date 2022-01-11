@@ -9,4 +9,6 @@ interface RemovedKeysTableInterface
     public function delete(string $key): void;
 
     public function isExist(string $key): bool;
+
+    public function getData(): array;
 }
