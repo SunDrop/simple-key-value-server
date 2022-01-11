@@ -17,7 +17,12 @@ class SSTable implements SSTableInterface
 
     public function get(string $key): string
     {
-        return $this->binarySearchKey($key);
+        $value = $this->binarySearchKey($key);
+        if (false === $value) {
+            throw new NotExistKeyException("Key $key not exist");
+        }
+
+        return $value;
     }
 
     public function isExist(string $key): bool
