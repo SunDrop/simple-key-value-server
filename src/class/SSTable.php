@@ -65,6 +65,8 @@ class SSTable implements SSTableInterface
                 }
                 [$ssKey, $ssVal] = $this->readLine($line);
                 if ($memIsDone) {
+                    // If $key exists in removedKeysTable we should "remove" it from SSTable
+                    // so, just skip this key
                     if (array_key_exists($ssKey, $removedKeys)) {
                         continue;
                     }
@@ -74,14 +76,8 @@ class SSTable implements SSTableInterface
                         continue;
                     }
                     $this->dumpItem($ssKey, $ssVal);
-                } elseif ($ssKey === $memKey) {
-                    $this->dumpItem($memKey, $memVal);
-                    $memVal = next($sortedData);
-                    $memKey = key($sortedData);
-                    if (false === $memVal) {
-                        $memIsDone = true;
-                    }
                 } else {
+                    // MemTable has more priority than SSTable
                     $this->dumpItem($memKey, $memVal);
                     $memVal = next($sortedData);
                     $memKey = key($sortedData);
